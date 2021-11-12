@@ -18,7 +18,11 @@ public class Player extends Character {
 	private int _agility;
 	private int _armorCount = 0;
 	private int _weaponCount = 0;
+	private int _column;
+	private int _row;
+	private String _state;
 	private String _information;
+	private Marker _symbol;
 	private ArrayList<Weapon> _weapons = new ArrayList<Weapon>();
 	private ArrayList<Armor> _armor = new ArrayList<Armor>();
 	private ArrayList<Potion> _potions = new ArrayList<Potion>();
@@ -33,6 +37,38 @@ public class Player extends Character {
 				+ " Mana: " + getMana() + " Strength: " + getStrength() + " Agility: " + getAgility() + " Dexterity: "
 				+ getDexterity() + ASCIIColor.RESET;
 		;
+	}
+	
+	public int getColumn() {
+		return _column;
+	}
+	
+	public int getRow() {
+		return _row;
+	}
+	
+	public void setColumn(int column) {
+		_column = column;
+	}
+	
+	public void setRow(int row) {
+		_row = row;
+	}
+	
+	public void setGameState(String state) {
+		_state = state;
+	}
+	
+	public String getGameState() {
+		return _state;
+	}
+	
+	public Marker getSymbol() {
+		return _symbol;
+	}
+	
+	public void setSymbol(Marker marker) {
+		_symbol = marker;
 	}
 
 	public void setInformation(String information) {

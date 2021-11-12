@@ -1,5 +1,3 @@
-import java.util.Random;
-
 /******
  * Gameboard 
  * Author: Adam Curley
@@ -12,7 +10,6 @@ public class Gameboard {
 	private static BoardCell[][] _gameboard;
 	private static int _columns, _rows;
 	private int[] _fixedSize;
-	private Random _r = new Random();
 
 	/*
 	 * Gameboard constructor, establishes the board's rows and columns and then
@@ -84,15 +81,15 @@ public class Gameboard {
 			for (int j = 0; j < getFixedSize()[1]; j++) {
 				if (i % 2 == 0) {
 					if (j % 2 == 0) {
-						gameboard[i][j] = new BoardCell(new Marker(ASCIIColor.YELLOW_BOLD + "+" + ASCIIColor.RESET));
+						gameboard[i][j] = new BoardCell(new Marker(ASCIIColor.YELLOW_BOLD + "++" + ASCIIColor.RESET));
 					} else {
-						gameboard[i][j] = new BoardCell(new Marker(ASCIIColor.YELLOW_BOLD + "-" + ASCIIColor.RESET));
+						gameboard[i][j] = new BoardCell(new Marker(ASCIIColor.YELLOW_BOLD + "--" + ASCIIColor.RESET));
 					}
 				} else {
 					if (j % 2 == 0) {
-						gameboard[i][j] = new BoardCell(new Marker(ASCIIColor.YELLOW_BOLD + "|" + ASCIIColor.RESET));
+						gameboard[i][j] = new BoardCell(new Marker(ASCIIColor.YELLOW_BOLD + "||" + ASCIIColor.RESET));
 					} else {
-						gameboard[i][j] = new BoardCell(new Marker(" "));
+						gameboard[i][j] = new BoardCell(new Marker("  "));
 					}
 				}
 			}
@@ -111,22 +108,10 @@ public class Gameboard {
 	 * place a Marker on the gameboard and log its location so it cant be filled again
 	 * Also, check booleans to see the location should be random or if a market is being placed
 	 */
-	public void place(Marker symbol, Logger logger, Team t, boolean random, boolean isMarket) {
+	public void place(Marker symbol, Logger logger, Player p, int row, int column, boolean isMarket) {
 		int[] move = new int[2];
-		int row = 0;
-		int column = 0;
-
-		while (logger.isMoveMade(move) || logger.isMarket(move)) {
-			if (random) {
-				row = _r.nextInt(getRows()) + 1;
-				column = _r.nextInt(getColumns()) + 1;
-			} else {
-				row = getRows() / 2;
-				column = getColumns() / 2;
-			}
-			move[0] = row;
-			move[1] = column;
-		}
+		move[0] = row;
+		move[1] = column;
 
 		if (isMarket) {
 			logger.addMarket(move);
@@ -136,12 +121,12 @@ public class Gameboard {
 
 		move = fixMove(row, column);
 
-		if (t != null) {
-			t.setColumn(column);
-			t.setRow(row);
+		if (p != null) {
+			p.setColumn(column);
+			p.setRow(row);
 		}
-
-		_gameboard[move[0]][move[1]].setMarker(symbol);
+		
+		_gameboard[move[0]][move[1]].setMarker(new Marker(symbol.getSymbol()));
 	}
 
 	/*

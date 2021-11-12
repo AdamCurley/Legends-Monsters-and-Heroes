@@ -12,10 +12,11 @@
 public class Paladin extends Player implements TypeReader {
 	private AttributeGatherer _reader = new AttributeGatherer();
 	
-	public Paladin(String name, String type, int character) {
+	public Paladin(String name, String type, Marker symbol, int character) {
 		setupAttributes(type, character);
 		this.setName(name);
 		this.setType(type);
+		this.setSymbol(new Marker(symbol.getSymbol() + " "));
 		this.setLevel(1);
 		this.setStatus("ALIVE");
 		this.setHealth(100 * this.getLevel());

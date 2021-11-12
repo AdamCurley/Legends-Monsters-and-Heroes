@@ -22,7 +22,7 @@ public class RPGUtility {
 		for (int i = 0; i < nameArray.length; i++) {
 			System.out.print("Enter Player " + (i + 1) + " Name: ");
 			String name = _util.stringCheck(_scanner, "Enter Player " + (i + 1) + " Name: ");
-			
+
 			nameArray[i] = name;
 		}
 

@@ -6,17 +6,13 @@
  * 
  ******/
 
-import java.util.Random;
 import java.util.Scanner;
 
 public class LegendsMandHUtility extends RPGUtility {
 	private Utility _util = new Utility();
 	private Scanner _scanner = new Scanner(System.in);
 	private Controller _controller = new Controller();
-	private Random _r = new Random();
-	private Combat _combat;
 	private String _choice = "";
-	private String _moveCheck = "";
 
 	/*
 	 * A (regular) game of Legends
@@ -31,63 +27,27 @@ public class LegendsMandHUtility extends RPGUtility {
 	 *  7. If the users are unlucky enough to enter a fight they will engage in combat and once that is completed we return to step 5.
 	 */
 	public String LMHGame(Team t, Market market, Gameboard gameboard, Logger logger) {
-		t.setInTransit(true);
-		System.out.println(_controller.getControls(t));
+		System.out.println(_controller.getControls(t.getTeam()[0]));
 		System.out.println(ASCIIColor.PURPLE_BACKGROUND + "Welcome to the world!" + ASCIIColor.RESET);
 
 		while (true) {
-			t.setInTransit(true);
 			gameboard.printGameboard();
-
-			boolean stillMoving = true;
-			while (stillMoving) {
-				System.out.print(t.getName() + " which direction would you like to move?: ");
-				_moveCheck = _controller.movementCheck(_scanner,
-						t.getName() + " which direction would you like to move?: ");
-
-				if (_moveCheck.equals("Q")) {
-					break;
-				} else if (_moveCheck.equals("H")) {
-					System.out.println(_controller.getControls(t));
-				} else if (_moveCheck.equals("X")) {
-					stillMoving = false;
-				} else {
-					int[] move = _controller.controlChoice(_moveCheck, gameboard, t, logger);
-					move = gameboard.fixMove(move[0], move[1]);
-					if (t.getGameState().equals("MARKET")) {
-						gameboard.getGameboard()[move[0]][move[1]].setMarker(
-								new Marker(ASCIIColor.RED_BACKGROUND + t.getSymbol().getSymbol() + ASCIIColor.RESET));
-					} else {
-						gameboard.getGameboard()[move[0]][move[1]].setMarker(t.getSymbol());
-						int rollDice = _r.nextInt(99);
-						if (rollDice > 69) {
-							_combat = new Combat(t);
-							_combat.combat();
-						}
-					}
-
-					stillMoving = false;
-				}
-			}
-			t.setInTransit(false);
-			if (_moveCheck.equals("Q")) {
-				break;
-			}
-
-			gameboard.printGameboard();
-
 			for (Player p : t.getTeam()) {
+				gameboard.printGameboard();
 				boolean stillThinking = true;
 				while (stillThinking) {
 
 					System.out.print(p.getName() + " what would you like to do?: ");
-					if (t.getGameState().equals("MARKET")) {
+					if (p.getGameState().equals("MARKET")) {
 						_choice = _controller.controlCheck(_scanner, "What would you like to do?: ", true);
 					} else {
 						_choice = _controller.controlCheck(_scanner, "What would you like to do?: ", false);
 					}
 
-					if (_choice.equals("M")) {
+					if (_choice.equals("Q")) {
+						break;
+					} 
+					else if (_choice.equals("M")) {
 						gameboard.printGameboard();
 					} else if (_choice.equals("O")) {
 						p.getInventory();
@@ -166,15 +126,30 @@ public class LegendsMandHUtility extends RPGUtility {
 						}
 					} else if (_choice.equals("E")) {
 						market.enterMarket(p);
+						stillThinking = false;
 					} else if (_choice.equals("I")) {
-						System.out.println(_controller.getInformation(t, p, null));
+						System.out.println(_controller.getInformation(p, null));
 					} else if (_choice.equals("H")) {
-						System.out.println(_controller.getControls(t));
+						System.out.println(_controller.getControls(p));
 					} else if (_choice.equals("Y")) {
+						stillThinking = false;
+					}
+					else {
+						int[] move = _controller.controlChoice(_choice, gameboard, p, logger);
+						move = gameboard.fixMove(move[0], move[1]);
+						if (p.getGameState().equals("MARKET")) {
+							gameboard.getGameboard()[move[0]][move[1]].setMarker(
+									new Marker(ASCIIColor.RED_BACKGROUND + p.getSymbol().getSymbol() + ASCIIColor.RESET));
+						} else {
+							gameboard.getGameboard()[move[0]][move[1]].setMarker(p.getSymbol());
+						}
 						stillThinking = false;
 					}
 				}
 			}
+			if (_choice.equals("Q")) {
+				break;
+			} 
 		}
 		return ASCIIColor.RED_BACKGROUND + "GAME OVER!" + ASCIIColor.RESET;
 	}
@@ -250,6 +225,9 @@ public class LegendsMandHUtility extends RPGUtility {
 
 			System.out.println(ASCIIColor.CYAN_BACKGROUND + "Classes:" + ASCIIColor.RESET + "\n" + "PALADIN\n"
 					+ "WARRIOR\n" + "SORCERER");
+			
+			System.out.print("Enter " + names[i] + "'s Symbol: ");
+			Marker symbol = _util.symbolCheck(_scanner, "Enter " + names[i] + "'s Symbol: ");
 
 			System.out.print("Enter " + names[i] + "'s Class: ");
 			String type = classCheck(_scanner, "Enter " + names[i] + "'s Class: ");
@@ -260,13 +238,13 @@ public class LegendsMandHUtility extends RPGUtility {
 			int character = _util.intCheck(_scanner, "Enter " + names[i] + "'s Base Character (enter number): ", 6, 1);
 
 			if (type.equals("PALADIN")) {
-				Paladin paladin = new Paladin(names[i], type, character);
+				Paladin paladin = new Paladin(names[i], type, symbol, character);
 				team.addMember(paladin, i);
 			} else if (type.equals("SORCERER")) {
-				Sorcerer sorcerer = new Sorcerer(names[i], type, character);
+				Sorcerer sorcerer = new Sorcerer(names[i], type, symbol, character);
 				team.addMember(sorcerer, i);
 			} else if (type.equals("WARRIOR")) {
-				Warrior warrior = new Warrior(names[i], type, character);
+				Warrior warrior = new Warrior(names[i], type, symbol, character);
 				team.addMember(warrior, i);
 			}
 		}

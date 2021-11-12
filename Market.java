@@ -15,7 +15,7 @@ public class Market {
 
 	
 	public Market() {
-		_symbol = new Marker(ASCIIColor.RED_BACKGROUND + " " + ASCIIColor.RESET);
+		_symbol = new Marker(ASCIIColor.RED_BACKGROUND + "  " + ASCIIColor.RESET);
 	}
 	
 	public Marker getMarketMarker() {

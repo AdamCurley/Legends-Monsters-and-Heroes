@@ -10,7 +10,7 @@ public class Inaccessible {
 	private Marker _symbol;
 	
 	public Inaccessible() {
-		_symbol = new Marker(ASCIIColor.WHITE_BACKGROUND + " " + ASCIIColor.RESET);
+		_symbol = new Marker(ASCIIColor.WHITE_BACKGROUND + "  " + ASCIIColor.RESET);
 	}
 	
 	public Marker getInaccessibleMarker() {

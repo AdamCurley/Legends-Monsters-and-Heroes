@@ -12,11 +12,12 @@
 public class Sorcerer extends Player implements TypeReader {
 	private AttributeGatherer _reader = new AttributeGatherer();
 	
-	public Sorcerer(String name, String type, int character) {
+	public Sorcerer(String name, String type, Marker symbol, int character) {
 		setupAttributes(type, character);
 		this.setName(name);
 		this.setLevel(1);
 		this.setStatus("ALIVE");
+		this.setSymbol(new Marker(symbol.getSymbol() + " "));
 		this.setHealth(100 * this.getLevel());
 		this.setType(type);
 		this.resetInformation();
